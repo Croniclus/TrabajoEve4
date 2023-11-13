@@ -2,13 +2,22 @@
 
 session_start();
 
-/*if($_POST["user"] == "admin" && $_POST["password"] == "1234"){
-    $_SESSION["user"] = "admin";
-    echo "Hola ".$_SESSION["user"];
-    header("Location:home.php");
-}*/
+$coockie_duraction = 3600 * 24 * 30;
 
-if($_POST["user"] == "admin" && $_POST["password"] == "1234"){
+if($_POST["user"] == "admin" && $_POST["password"] == "1234" || $_POST["user"] == "cliente1" && $_POST["password"] == "password1"){
+    $user = $_POST["user"];
+    $pass = $_POST["password"];
+    if($user == "admin" ){
+        $rol["user"] = "sudo";
+    }else{
+        $rol["user"] = "normal";
+    }
+
+    if(isset($_POST["recordarme"])){
+        setcookie("user", $user ,time() + $coockie_duraction);
+    }
+
+
     $_SESSION["user"] = "admin";
     echo "Hola ".$_SESSION["user"];
 
@@ -27,9 +36,14 @@ if($_POST["user"] == "admin" && $_POST["password"] == "1234"){
         <br>
         <input type="submit" name="buscarF" value="Buscar Fichero">
         <br><br>
-        <input type="text" placeholder="Fichero a crear" name="nombreNuevoFichero">
-        <br>
-        <input type="submit" name="crearF" value="Crear un fichero">
+        <?php
+        if($rol["user"] == "sudo"){
+            echo '<input type="text" placeholder="Fichero a crear" name="nombreNuevoFichero">
+            <br>
+            <input type="submit" name="crearF" value="Crear un fichero">'; 
+        }
+        
+        ?>
     </form>
 
     <form action="tareas.php" method="get">
